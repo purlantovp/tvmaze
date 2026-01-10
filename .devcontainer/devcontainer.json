@@ -1,0 +1,25 @@
+{
+  "name": "tvmaze (.NET 8 + Angular 21)",
+  "dockerComposeFile": ["docker-compose.yml"],
+  "service": "devcontainer",
+  "workspaceFolder": "/workspace",
+  "workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind,consistency=cached",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-dotnettools.csharp",
+        "angular.ng-template",
+        "esbenp.prettier-vscode",
+        "dbaeumer.vscode-eslint",
+        "anthropic.claude-vscode",
+        "ms-dotnettools.csdevkit",
+        "qwtel.sqlite-viewer"
+      ]
+    }
+  },
+  "postCreateCommand": "bash -lc 'dotnet --info && node --version && npm --version && corepack enable && npm i -g @angular/cli@21 && echo Dev container ready'",
+  "remoteUser": "vscode",
+  "overrideCommand": false,
+  "runServices": ["mssql"],
+  "shutdownAction": "stopCompose"
+}
