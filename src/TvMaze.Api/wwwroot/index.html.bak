@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TVMaze API Demo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            padding: 30px;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        .controls {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        button:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .scrape-button {
+            background: #48bb78;
+        }
+
+        .scrape-button:hover {
+            background: #38a169;
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .page-info {
+            color: #666;
+            font-weight: 600;
+        }
+
+        .status {
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .status.loading {
+            background: #bee3f8;
+            color: #2c5282;
+        }
+
+        .status.success {
+            background: #c6f6d5;
+            color: #22543d;
+        }
+
+        .status.error {
+            background: #fed7d7;
+            color: #742a2a;
+        }
+
+        .shows-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .show-card {
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 20px;
+            background: #f7fafc;
+            transition: all 0.3s;
+        }
+
+        .show-card:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transform: translateY(-4px);
+        }
+
+        .show-name {
+            font-size: 18px;
+            font-weight: bold;
+            color: #2d3748;
+            margin-bottom: 15px;
+        }
+
+        .show-id {
+            color: #718096;
+            font-size: 12px;
+            margin-bottom: 10px;
+        }
+
+        .cast-section {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #cbd5e0;
+        }
+
+        .cast-title {
+            font-weight: 600;
+            color: #4a5568;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+
+        .cast-member {
+            padding: 8px 12px;
+            background: white;
+            border-radius: 5px;
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 13px;
+        }
+
+        .cast-name {
+            color: #2d3748;
+            font-weight: 500;
+        }
+
+        .cast-birthday {
+            color: #718096;
+            font-size: 11px;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #718096;
+        }
+
+        .empty-state-icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+        }
+
+        .links {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .links a {
+            color: #667eea;
+            text-decoration: none;
+            margin: 0 15px;
+            font-weight: 600;
+        }
+
+        .links a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            .shows-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .controls {
+                flex-direction: column;
+            }
+
+            .button-group {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>TVMaze API Demo</h1>
+        <p class="subtitle">Browse TV shows and their cast members</p>
+
+        <div class="controls">
+            <div class="button-group">
+                <button class="scrape-button" onclick="scrapeShows()">Scrape Shows</button>
+                <button onclick="refreshCount()">Refresh Count</button>
+            </div>
+            <div class="page-info">
+                Total Shows: <span id="totalCount">-</span>
+            </div>
+        </div>
+
+        <div id="status" class="status" style="display: none;"></div>
+
+        <div class="pagination">
+            <button onclick="previousPage()" id="prevBtn">Previous</button>
+            <span class="page-info">
+                Page <span id="currentPage">1</span> of <span id="totalPages">-</span>
+            </span>
+            <button onclick="nextPage()" id="nextBtn">Next</button>
+        </div>
+
+        <div id="shows" class="shows-grid"></div>
+
+        <div class="links">
+            <a href="/swagger" target="_blank">API Documentation</a>
+            <a href="https://www.tvmaze.com/api" target="_blank">TVMaze API</a>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = '/api';
+        let currentPage = 1;
+        const pageSize = 12;
+
+        async function loadShows() {
+            showStatus('Loading shows...', 'loading');
+
+            try {
+                const response = await fetch(`${API_BASE}/shows?pageNumber=${currentPage}&pageSize=${pageSize}`);
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const data = await response.json();
+                displayShows(data);
+                updatePagination(data);
+                hideStatus();
+            } catch (error) {
+                showStatus(`Error loading shows: ${error.message}`, 'error');
+                console.error('Error:', error);
+            }
+        }
+
+        async function refreshCount() {
+            try {
+                const response = await fetch(`${API_BASE}/shows/count`);
+                const count = await response.json();
+                document.getElementById('totalCount').textContent = count;
+            } catch (error) {
+                console.error('Error fetching count:', error);
+            }
+        }
+
+        async function scrapeShows() {
+            const confirmed = confirm('This will scrape 10 pages of shows from TVMaze API. This may take a few minutes. Continue?');
+            if (!confirmed) return;
+
+            showStatus('Scraping shows from TVMaze API... This may take a few minutes.', 'loading');
+
+            try {
+                const response = await fetch(`${API_BASE}/scraper/scrape?startPage=0&pageCount=10`, {
+                    method: 'POST'
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const result = await response.json();
+                showStatus(`Successfully scraped ${result.totalScraped} shows! (${result.newShows} new, ${result.updatedShows} updated)`, 'success');
+
+                await refreshCount();
+                await loadShows();
+            } catch (error) {
+                showStatus(`Error scraping shows: ${error.message}`, 'error');
+                console.error('Error:', error);
+            }
+        }
+
+        function displayShows(data) {
+            const container = document.getElementById('shows');
+
+            if (data.items.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">📺</div>
+                        <h2>No shows found</h2>
+                        <p>Click "Scrape Shows" to fetch data from TVMaze API</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = data.items.map(show => `
+                <div class="show-card">
+                    <div class="show-id">Show ID: ${show.id}</div>
+                    <div class="show-name">${escapeHtml(show.name)}</div>
+                    ${show.cast.length > 0 ? `
+                        <div class="cast-section">
+                            <div class="cast-title">Cast Members (${show.cast.length})</div>
+                            ${show.cast.slice(0, 5).map(cast => `
+                                <div class="cast-member">
+                                    <span class="cast-name">${escapeHtml(cast.name)}</span>
+                                    <span class="cast-birthday">${formatDate(cast.birthday)}</span>
+                                </div>
+                            `).join('')}
+                            ${show.cast.length > 5 ? `<div style="text-align: center; color: #718096; margin-top: 8px; font-size: 12px;">+${show.cast.length - 5} more</div>` : ''}
+                        </div>
+                    ` : '<div style="color: #718096; font-size: 13px; margin-top: 10px;">No cast information</div>'}
+                </div>
+            `).join('');
+        }
+
+        function updatePagination(data) {
+            document.getElementById('currentPage').textContent = data.pageNumber;
+            document.getElementById('totalPages').textContent = data.totalPages;
+            document.getElementById('prevBtn').disabled = !data.hasPrevious;
+            document.getElementById('nextBtn').disabled = !data.hasNext;
+        }
+
+        function previousPage() {
+            if (currentPage > 1) {
+                currentPage--;
+                loadShows();
+            }
+        }
+
+        function nextPage() {
+            currentPage++;
+            loadShows();
+        }
+
+        function showStatus(message, type) {
+            const status = document.getElementById('status');
+            status.textContent = message;
+            status.className = `status ${type}`;
+            status.style.display = 'block';
+        }
+
+        function hideStatus() {
+            const status = document.getElementById('status');
+            status.style.display = 'none';
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function formatDate(dateString) {
+            if (!dateString || dateString === '0001-01-01T00:00:00') return 'Unknown';
+            const date = new Date(dateString);
+            return date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+        }
+
+        // Initialize
+        refreshCount();
+        loadShows();
+    </script>
+</body>
+</html>

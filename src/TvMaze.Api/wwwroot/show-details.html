@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Show Details - TVMaze API</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            padding: 30px;
+        }
+
+        .back-button {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            margin-bottom: 20px;
+            transition: all 0.3s;
+        }
+
+        .back-button:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .show-id {
+            color: #718096;
+            font-size: 14px;
+            margin-bottom: 30px;
+        }
+
+        .status {
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .status.loading {
+            background: #bee3f8;
+            color: #2c5282;
+        }
+
+        .status.error {
+            background: #fed7d7;
+            color: #742a2a;
+        }
+
+        .cast-section {
+            margin-top: 30px;
+        }
+
+        .cast-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        .cast-count {
+            color: #718096;
+            font-size: 14px;
+            font-weight: normal;
+            margin-left: 10px;
+        }
+
+        .cast-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .cast-table thead {
+            background: #f7fafc;
+        }
+
+        .cast-table th {
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+            color: #4a5568;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        .cast-table td {
+            padding: 15px;
+            border-bottom: 1px solid #e2e8f0;
+            color: #2d3748;
+        }
+
+        .cast-table tbody tr:hover {
+            background: #f7fafc;
+        }
+
+        .cast-name {
+            font-weight: 500;
+            color: #2d3748;
+        }
+
+        .cast-id {
+            color: #718096;
+            font-size: 13px;
+        }
+
+        .cast-birthday {
+            color: #4a5568;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #718096;
+        }
+
+        .empty-state-icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .cast-table {
+                font-size: 14px;
+            }
+
+            .cast-table th,
+            .cast-table td {
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="/" class="back-button">← Back to Shows</a>
+
+        <div id="status" class="status" style="display: none;"></div>
+
+        <div id="show-details">
+            <h1 id="show-name">Loading...</h1>
+            <div class="show-id">Show ID: <span id="show-id">-</span></div>
+
+            <div class="cast-section">
+                <div class="cast-title">
+                    Cast Members
+                    <span class="cast-count" id="cast-count"></span>
+                </div>
+                <table class="cast-table" id="cast-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Birthday</th>
+                        </tr>
+                    </thead>
+                    <tbody id="cast-tbody">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = '/api';
+
+        function getShowIdFromUrl() {
+            const params = new URLSearchParams(window.location.search);
+            return params.get('id');
+        }
+
+        async function loadShowDetails() {
+            const showId = getShowIdFromUrl();
+
+            if (!showId) {
+                showStatus('No show ID provided', 'error');
+                return;
+            }
+
+            showStatus('Loading show details...', 'loading');
+
+            try {
+                const response = await fetch(`${API_BASE}/shows/${showId}`);
+
+                if (!response.ok) {
+                    if (response.status === 404) {
+                        throw new Error('Show not found');
+                    }
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const show = await response.json();
+                displayShowDetails(show);
+                hideStatus();
+            } catch (error) {
+                showStatus(`Error loading show: ${error.message}`, 'error');
+                console.error('Error:', error);
+            }
+        }
+
+        function displayShowDetails(show) {
+            document.getElementById('show-name').textContent = show.name;
+            document.getElementById('show-id').textContent = show.id;
+            document.getElementById('cast-count').textContent = `(${show.cast.length} members)`;
+
+            const tbody = document.getElementById('cast-tbody');
+
+            if (show.cast.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="3">
+                            <div class="empty-state">
+                                <div class="empty-state-icon">🎭</div>
+                                <h2>No cast information</h2>
+                                <p>This show has no cast members listed</p>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            tbody.innerHTML = show.cast.map(cast => `
+                <tr>
+                    <td class="cast-id">${cast.id}</td>
+                    <td class="cast-name">${escapeHtml(cast.name)}</td>
+                    <td class="cast-birthday">${formatDate(cast.birthday)}</td>
+                </tr>
+            `).join('');
+        }
+
+        function showStatus(message, type) {
+            const status = document.getElementById('status');
+            status.textContent = message;
+            status.className = `status ${type}`;
+            status.style.display = 'block';
+        }
+
+        function hideStatus() {
+            const status = document.getElementById('status');
+            status.style.display = 'none';
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function formatDate(dateString) {
+            if (!dateString || dateString === '0001-01-01T00:00:00') return 'Unknown';
+            const date = new Date(dateString);
+            return date.toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+        }
+
+        // Initialize
+        loadShowDetails();
+    </script>
+</body>
+</html>

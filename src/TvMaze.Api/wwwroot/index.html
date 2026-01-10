@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TVMaze API Demo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            padding: 30px;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        .controls {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        button:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .scrape-button {
+            background: #48bb78;
+        }
+
+        .scrape-button:hover {
+            background: #38a169;
+        }
+
+        .search-section {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .search-box {
+            padding: 10px 15px;
+            border: 2px solid #e2e8f0;
+            border-radius: 5px;
+            font-size: 14px;
+            min-width: 250px;
+            transition: border-color 0.3s;
+        }
+
+        .search-box:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .sort-select {
+            padding: 10px 15px;
+            border: 2px solid #e2e8f0;
+            border-radius: 5px;
+            font-size: 14px;
+            background: white;
+            cursor: pointer;
+            transition: border-color 0.3s;
+        }
+
+        .sort-select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .page-info {
+            color: #666;
+            font-weight: 600;
+        }
+
+        .status {
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .status.loading {
+            background: #bee3f8;
+            color: #2c5282;
+        }
+
+        .status.success {
+            background: #c6f6d5;
+            color: #22543d;
+        }
+
+        .status.error {
+            background: #fed7d7;
+            color: #742a2a;
+        }
+
+        .shows-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            overflow-x: auto;
+        }
+
+        .shows-table thead {
+            background: #f7fafc;
+        }
+
+        .shows-table th {
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+            color: #4a5568;
+            border-bottom: 2px solid #e2e8f0;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .shows-table th:hover {
+            background: #edf2f7;
+        }
+
+        .shows-table th.sortable::after {
+            content: ' ⇅';
+            color: #cbd5e0;
+        }
+
+        .shows-table th.sorted-asc::after {
+            content: ' ↑';
+            color: #667eea;
+        }
+
+        .shows-table th.sorted-desc::after {
+            content: ' ↓';
+            color: #667eea;
+        }
+
+        .shows-table td {
+            padding: 15px;
+            border-bottom: 1px solid #e2e8f0;
+            color: #2d3748;
+        }
+
+        .shows-table tbody tr:hover {
+            background: #f7fafc;
+        }
+
+        .show-name {
+            font-weight: 600;
+            color: #2d3748;
+        }
+
+        .show-id {
+            color: #718096;
+            font-size: 13px;
+        }
+
+        .cast-list {
+            max-height: 150px;
+            overflow-y: auto;
+        }
+
+        .cast-member {
+            padding: 5px 0;
+            font-size: 13px;
+            color: #4a5568;
+        }
+
+        .cast-count {
+            color: #718096;
+            font-size: 12px;
+            font-style: italic;
+            margin-bottom: 5px;
+        }
+
+        .view-details-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s;
+        }
+
+        .view-details-btn:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #718096;
+        }
+
+        .empty-state-icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+        }
+
+        .links {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .links a {
+            color: #667eea;
+            text-decoration: none;
+            margin: 0 15px;
+            font-weight: 600;
+        }
+
+        .links a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            .controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .button-group {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .search-section {
+                width: 100%;
+            }
+
+            .search-box {
+                flex: 1;
+                min-width: 0;
+            }
+
+            .shows-table {
+                font-size: 14px;
+            }
+
+            .shows-table th,
+            .shows-table td {
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>TVMaze API Demo</h1>
+        <p class="subtitle">Browse TV shows and their cast members</p>
+
+        <div class="controls">
+            <div class="button-group">
+                <button class="scrape-button" onclick="scrapeShows()">Scrape Shows</button>
+                <button onclick="refreshCount()">Refresh Count</button>
+            </div>
+            <div class="page-info">
+                Total Shows: <span id="totalCount">-</span>
+            </div>
+        </div>
+
+        <div class="controls">
+            <div class="search-section">
+                <input
+                    type="text"
+                    class="search-box"
+                    id="searchBox"
+                    placeholder="Search by show name or cast member..."
+                    onkeypress="handleSearchKeypress(event)">
+                <button onclick="applySearch()">Search</button>
+                <button onclick="clearSearch()">Clear</button>
+            </div>
+            <div class="search-section">
+                <label for="sortSelect">Sort by:</label>
+                <select class="sort-select" id="sortSelect" onchange="applySorting()">
+                    <option value="">Default (ID)</option>
+                    <option value="name">Name (A-Z)</option>
+                    <option value="name_desc">Name (Z-A)</option>
+                </select>
+            </div>
+        </div>
+
+        <div id="status" class="status" style="display: none;"></div>
+
+        <div class="pagination">
+            <button onclick="previousPage()" id="prevBtn">Previous</button>
+            <span class="page-info">
+                Page <span id="currentPage">1</span> of <span id="totalPages">-</span>
+            </span>
+            <button onclick="nextPage()" id="nextBtn">Next</button>
+        </div>
+
+        <div id="shows-container">
+            <table class="shows-table" id="shows-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th class="sortable" onclick="sortByName()">Show Name</th>
+                        <th>Cast Members</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="shows-tbody">
+                </tbody>
+            </table>
+        </div>
+
+        <div class="links">
+            <a href="/swagger" target="_blank">API Documentation</a>
+            <a href="https://www.tvmaze.com/api" target="_blank">TVMaze API</a>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = '/api';
+        let currentPage = 1;
+        const pageSize = 20;
+        let currentSort = '';
+        let currentSearch = '';
+
+        async function loadShows() {
+            showStatus('Loading shows...', 'loading');
+
+            try {
+                let url = `${API_BASE}/shows?pageNumber=${currentPage}&pageSize=${pageSize}`;
+
+                if (currentSort) {
+                    url += `&orderBy=${currentSort}`;
+                }
+
+                if (currentSearch) {
+                    url += `&searchTerm=${encodeURIComponent(currentSearch)}`;
+                }
+
+                const response = await fetch(url);
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const data = await response.json();
+                displayShows(data);
+                updatePagination(data);
+                updateSortIndicator();
+                hideStatus();
+            } catch (error) {
+                showStatus(`Error loading shows: ${error.message}`, 'error');
+                console.error('Error:', error);
+            }
+        }
+
+        async function refreshCount() {
+            try {
+                const response = await fetch(`${API_BASE}/shows/count`);
+                const count = await response.json();
+                document.getElementById('totalCount').textContent = count;
+            } catch (error) {
+                console.error('Error fetching count:', error);
+            }
+        }
+
+        async function scrapeShows() {
+            const confirmed = confirm('This will scrape 10 pages of shows from TVMaze API. This may take a few minutes. Continue?');
+            if (!confirmed) return;
+
+            showStatus('Scraping shows from TVMaze API... This may take a few minutes.', 'loading');
+
+            try {
+                const response = await fetch(`${API_BASE}/scraper/scrape?startPage=0&pageCount=10`, {
+                    method: 'POST'
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const result = await response.json();
+                showStatus(`Successfully scraped ${result.totalScraped} shows! (${result.newShows} new, ${result.updatedShows} updated)`, 'success');
+
+                await refreshCount();
+                await loadShows();
+            } catch (error) {
+                showStatus(`Error scraping shows: ${error.message}`, 'error');
+                console.error('Error:', error);
+            }
+        }
+
+        function displayShows(data) {
+            const tbody = document.getElementById('shows-tbody');
+
+            if (data.items.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="4">
+                            <div class="empty-state">
+                                <div class="empty-state-icon">📺</div>
+                                <h2>No shows found</h2>
+                                <p>Click "Scrape Shows" to fetch data from TVMaze API</p>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            tbody.innerHTML = data.items.map(show => `
+                <tr>
+                    <td class="show-id">${show.id}</td>
+                    <td class="show-name">${escapeHtml(show.name)}</td>
+                    <td>
+                        ${show.cast.length > 0 ? `
+                            <div class="cast-count">${show.cast.length} cast member${show.cast.length !== 1 ? 's' : ''}</div>
+                            <div class="cast-list">
+                                ${show.cast.slice(0, 5).map(cast => `
+                                    <div class="cast-member">${escapeHtml(cast.name)}</div>
+                                `).join('')}
+                                ${show.cast.length > 5 ? `<div class="cast-member">+${show.cast.length - 5} more...</div>` : ''}
+                            </div>
+                        ` : '<div style="color: #718096; font-size: 13px;">No cast information</div>'}
+                    </td>
+                    <td>
+                        <a href="/show-details.html?id=${show.id}" class="view-details-btn">View Cast</a>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function updatePagination(data) {
+            document.getElementById('currentPage').textContent = data.pageNumber;
+            document.getElementById('totalPages').textContent = data.totalPages;
+            document.getElementById('prevBtn').disabled = !data.hasPrevious;
+            document.getElementById('nextBtn').disabled = !data.hasNext;
+        }
+
+        function updateSortIndicator() {
+            const headers = document.querySelectorAll('.shows-table th');
+            headers.forEach(h => h.classList.remove('sorted-asc', 'sorted-desc'));
+
+            if (currentSort === 'name') {
+                headers[1].classList.add('sorted-asc');
+            } else if (currentSort === 'name_desc') {
+                headers[1].classList.add('sorted-desc');
+            }
+
+            document.getElementById('sortSelect').value = currentSort;
+        }
+
+        function sortByName() {
+            if (currentSort === 'name') {
+                currentSort = 'name_desc';
+            } else {
+                currentSort = 'name';
+            }
+            currentPage = 1;
+            loadShows();
+        }
+
+        function applySorting() {
+            currentSort = document.getElementById('sortSelect').value;
+            currentPage = 1;
+            loadShows();
+        }
+
+        function applySearch() {
+            currentSearch = document.getElementById('searchBox').value;
+            currentPage = 1;
+            loadShows();
+        }
+
+        function clearSearch() {
+            document.getElementById('searchBox').value = '';
+            currentSearch = '';
+            currentPage = 1;
+            loadShows();
+        }
+
+        function handleSearchKeypress(event) {
+            if (event.key === 'Enter') {
+                applySearch();
+            }
+        }
+
+        function previousPage() {
+            if (currentPage > 1) {
+                currentPage--;
+                loadShows();
+            }
+        }
+
+        function nextPage() {
+            currentPage++;
+            loadShows();
+        }
+
+        function showStatus(message, type) {
+            const status = document.getElementById('status');
+            status.textContent = message;
+            status.className = `status ${type}`;
+            status.style.display = 'block';
+        }
+
+        function hideStatus() {
+            const status = document.getElementById('status');
+            status.style.display = 'none';
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Initialize
+        refreshCount();
+        loadShows();
+    </script>
+</body>
+</html>
