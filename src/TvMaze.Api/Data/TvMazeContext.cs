@@ -19,7 +19,7 @@ public class TvMazeContext : DbContext, ITvMazeContext
         modelBuilder.Entity<Show>(entity =>
         {
             entity.HasKey(e => e.Id);
-            entity.Property(e => e.Id).ValueGeneratedNever(); // Don't auto-generate, use TVMaze API ID
+            entity.Property(e => e.Id).ValueGeneratedNever();
             entity.Property(e => e.Name).IsRequired().HasMaxLength(200);
             entity.HasMany(e => e.Cast)
                   .WithOne(e => e.Show)
@@ -29,9 +29,9 @@ public class TvMazeContext : DbContext, ITvMazeContext
 
         modelBuilder.Entity<CastMember>(entity =>
         {
-            entity.HasKey(e => new { e.CastMemberId, e.ShowId }); // Composite key
+            entity.HasKey(e => new { e.CastMemberId, e.ShowId });
             entity.Property(e => e.Name).IsRequired().HasMaxLength(200);
-            entity.Property(e => e.Birthday).IsRequired(false); // Birthday is nullable
+            entity.Property(e => e.Birthday).IsRequired(false);
         });
     }
 }

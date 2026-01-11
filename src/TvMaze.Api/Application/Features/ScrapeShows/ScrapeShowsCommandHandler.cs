@@ -31,21 +31,19 @@ public class ScrapeShowsCommandHandler : IRequestHandler<ScrapeShowsCommand, Scr
             request.StartPage, request.PageCount);
 
         var shows = new List<Show>();
-        var httpClient = _httpClientFactory.CreateClient();
+        var httpClient = _httpClientFactory.CreateClient("TvMazeApi");
 
-        // Fetch shows from TVMaze API
         for (int page = request.StartPage; page < request.StartPage + request.PageCount; page++)
         {
             try
             {
-                var showsUrl = $"https://api.tvmaze.com/shows?page={page}";
+                var showsUrl = $"shows?page={page}";
                 var showsResponse = await httpClient.GetStringAsync(showsUrl, cancellationToken);
                 var tvMazeShows = JsonSerializer.Deserialize<List<TvMazeShow>>(showsResponse) ?? new List<TvMazeShow>();
 
                 foreach (var tvShow in tvMazeShows)
                 {
-                    // Fetch cast for each show
-                    var castUrl = $"https://api.tvmaze.com/shows/{tvShow.Id}/cast";
+                    var castUrl = $"shows/{tvShow.Id}/cast";
                     var castResponse = await httpClient.GetStringAsync(castUrl, cancellationToken);
                     var tvMazeCast = JsonSerializer.Deserialize<List<TvMazeCastMember>>(castResponse) ?? new List<TvMazeCastMember>();
 
@@ -74,7 +72,6 @@ public class ScrapeShowsCommandHandler : IRequestHandler<ScrapeShowsCommand, Scr
         int newShows = 0;
         int updatedShows = 0;
 
-        // Save shows to database
         foreach (var show in shows)
         {
             var existingShow = await _context.Shows
@@ -84,7 +81,6 @@ public class ScrapeShowsCommandHandler : IRequestHandler<ScrapeShowsCommand, Scr
 
             if (existingShow != null)
             {
-                // Update existing show - attach and update
                 var showToUpdate = await _context.Shows
                     .Include(s => s.Cast)
                     .FirstOrDefaultAsync(s => s.Id == show.Id, cancellationToken);
@@ -93,10 +89,8 @@ public class ScrapeShowsCommandHandler : IRequestHandler<ScrapeShowsCommand, Scr
                 {
                     showToUpdate.Name = show.Name;
 
-                    // Remove old cast members
                     _context.CastMembers.RemoveRange(showToUpdate.Cast);
 
-                    // Add new cast members
                     foreach (var castMember in show.Cast)
                     {
                         showToUpdate.Cast.Add(castMember);
@@ -107,13 +101,12 @@ public class ScrapeShowsCommandHandler : IRequestHandler<ScrapeShowsCommand, Scr
             }
             else
             {
-                // Add new show
                 await _context.Shows.AddAsync(show, cancellationToken);
                 newShows++;
             }
 
             await _context.SaveChangesAsync(cancellationToken);
-            _context.ChangeTracker.Clear(); // Clear tracking to avoid duplicate key errors
+            _context.ChangeTracker.Clear();
         }
 
         var result = new ScrapeResult

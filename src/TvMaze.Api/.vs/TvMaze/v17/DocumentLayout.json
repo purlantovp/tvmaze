@@ -1,0 +1,126 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Git\\DMARC\\tvmaze-assignment\\tvmaze\\src\\TvMaze.Api\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{A1B2C3D4-E5F6-7890-ABCD-EF1234567890}|TvMaze.Api.csproj|c:\\git\\dmarc\\tvmaze-assignment\\tvmaze\\src\\tvmaze.api\\models\\show.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A1B2C3D4-E5F6-7890-ABCD-EF1234567890}|TvMaze.Api.csproj|solutionrelative:models\\show.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A1B2C3D4-E5F6-7890-ABCD-EF1234567890}|TvMaze.Api.csproj|c:\\git\\dmarc\\tvmaze-assignment\\tvmaze\\src\\tvmaze.api\\models\\results\\scraperesult.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A1B2C3D4-E5F6-7890-ABCD-EF1234567890}|TvMaze.Api.csproj|solutionrelative:models\\results\\scraperesult.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A1B2C3D4-E5F6-7890-ABCD-EF1234567890}|TvMaze.Api.csproj|c:\\git\\dmarc\\tvmaze-assignment\\tvmaze\\src\\tvmaze.api\\models\\tvmazedtos\\tvmazecastmember.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A1B2C3D4-E5F6-7890-ABCD-EF1234567890}|TvMaze.Api.csproj|solutionrelative:models\\tvmazedtos\\tvmazecastmember.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A1B2C3D4-E5F6-7890-ABCD-EF1234567890}|TvMaze.Api.csproj|c:\\git\\dmarc\\tvmaze-assignment\\tvmaze\\src\\tvmaze.api\\models\\tvmazedtos\\tvmazeperson.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A1B2C3D4-E5F6-7890-ABCD-EF1234567890}|TvMaze.Api.csproj|solutionrelative:models\\tvmazedtos\\tvmazeperson.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A1B2C3D4-E5F6-7890-ABCD-EF1234567890}|TvMaze.Api.csproj|c:\\git\\dmarc\\tvmaze-assignment\\tvmaze\\src\\tvmaze.api\\models\\tvmazedtos\\tvmazeshow.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A1B2C3D4-E5F6-7890-ABCD-EF1234567890}|TvMaze.Api.csproj|solutionrelative:models\\tvmazedtos\\tvmazeshow.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A1B2C3D4-E5F6-7890-ABCD-EF1234567890}|TvMaze.Api.csproj|c:\\git\\dmarc\\tvmaze-assignment\\tvmaze\\src\\tvmaze.api\\models\\dtos\\showdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A1B2C3D4-E5F6-7890-ABCD-EF1234567890}|TvMaze.Api.csproj|solutionrelative:models\\dtos\\showdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 1,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{aa2115a1-9712-457b-9047-dbb71ca2cdd2}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Show.cs",
+              "DocumentMoniker": "C:\\Git\\DMARC\\tvmaze-assignment\\tvmaze\\src\\TvMaze.Api\\Models\\Show.cs",
+              "RelativeDocumentMoniker": "Models\\Show.cs",
+              "ToolTip": "C:\\Git\\DMARC\\tvmaze-assignment\\tvmaze\\src\\TvMaze.Api\\Models\\Show.cs",
+              "RelativeToolTip": "Models\\Show.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-11T19:04:25.23Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "ScrapeResult.cs",
+              "DocumentMoniker": "C:\\Git\\DMARC\\tvmaze-assignment\\tvmaze\\src\\TvMaze.Api\\Models\\Results\\ScrapeResult.cs",
+              "RelativeDocumentMoniker": "Models\\Results\\ScrapeResult.cs",
+              "ToolTip": "C:\\Git\\DMARC\\tvmaze-assignment\\tvmaze\\src\\TvMaze.Api\\Models\\Results\\ScrapeResult.cs",
+              "RelativeToolTip": "Models\\Results\\ScrapeResult.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-11T19:04:21.106Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "TvMazeCastMember.cs",
+              "DocumentMoniker": "C:\\Git\\DMARC\\tvmaze-assignment\\tvmaze\\src\\TvMaze.Api\\Models\\TvMazeDtos\\TvMazeCastMember.cs",
+              "RelativeDocumentMoniker": "Models\\TvMazeDtos\\TvMazeCastMember.cs",
+              "ToolTip": "C:\\Git\\DMARC\\tvmaze-assignment\\tvmaze\\src\\TvMaze.Api\\Models\\TvMazeDtos\\TvMazeCastMember.cs",
+              "RelativeToolTip": "Models\\TvMazeDtos\\TvMazeCastMember.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-11T19:04:16.046Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "TvMazePerson.cs",
+              "DocumentMoniker": "C:\\Git\\DMARC\\tvmaze-assignment\\tvmaze\\src\\TvMaze.Api\\Models\\TvMazeDtos\\TvMazePerson.cs",
+              "RelativeDocumentMoniker": "Models\\TvMazeDtos\\TvMazePerson.cs",
+              "ToolTip": "C:\\Git\\DMARC\\tvmaze-assignment\\tvmaze\\src\\TvMaze.Api\\Models\\TvMazeDtos\\TvMazePerson.cs",
+              "RelativeToolTip": "Models\\TvMazeDtos\\TvMazePerson.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-11T19:04:12.634Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "TvMazeShow.cs",
+              "DocumentMoniker": "C:\\Git\\DMARC\\tvmaze-assignment\\tvmaze\\src\\TvMaze.Api\\Models\\TvMazeDtos\\TvMazeShow.cs",
+              "RelativeDocumentMoniker": "Models\\TvMazeDtos\\TvMazeShow.cs",
+              "ToolTip": "C:\\Git\\DMARC\\tvmaze-assignment\\tvmaze\\src\\TvMaze.Api\\Models\\TvMazeDtos\\TvMazeShow.cs",
+              "RelativeToolTip": "Models\\TvMazeDtos\\TvMazeShow.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-11T19:04:09.075Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "ShowDto.cs",
+              "DocumentMoniker": "C:\\Git\\DMARC\\tvmaze-assignment\\tvmaze\\src\\TvMaze.Api\\Models\\DTOs\\ShowDto.cs",
+              "RelativeDocumentMoniker": "Models\\DTOs\\ShowDto.cs",
+              "ToolTip": "C:\\Git\\DMARC\\tvmaze-assignment\\tvmaze\\src\\TvMaze.Api\\Models\\DTOs\\ShowDto.cs",
+              "RelativeToolTip": "Models\\DTOs\\ShowDto.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-11T19:03:58.744Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

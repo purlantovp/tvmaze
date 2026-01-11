@@ -24,14 +24,14 @@ public class GetShowsQueryHandler : IRequestHandler<GetShowsQuery, PagedResult<S
 
         var query = _context.Shows.Include(s => s.Cast).AsQueryable();
 
-        // Apply search filter
+
         if (!string.IsNullOrWhiteSpace(request.SearchTerm))
         {
-            query = query.Where(s => s.Name.Contains(request.SearchTerm) ||
-                                    s.Cast.Any(c => c.Name.Contains(request.SearchTerm)));
+            var searchTerm = request.SearchTerm.ToLower();
+            query = query.Where(s => s.Name.ToLower().Contains(searchTerm) ||
+                                    s.Cast.Any(c => c.Name.ToLower().Contains(searchTerm)));
         }
 
-        // Apply ordering
         query = request.OrderBy?.ToLower() switch
         {
             "name" => query.OrderBy(s => s.Name),
@@ -39,10 +39,8 @@ public class GetShowsQueryHandler : IRequestHandler<GetShowsQuery, PagedResult<S
             _ => query.OrderBy(s => s.Id)
         };
 
-        // Get total count
         var totalCount = await query.CountAsync(cancellationToken);
 
-        // Apply pagination
         var shows = await query
             .Skip((request.PageNumber - 1) * request.PageSize)
             .Take(request.PageSize)

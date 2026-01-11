@@ -44,7 +44,7 @@ public class ExceptionHandlingMiddleware
 
         var response = new
         {
-            type = "https://tools.ietf.org/html/rfc7231#section-6.5.1",
+            type = HttpStatusCode.BadRequest,
             title = "One or more validation errors occurred.",
             status = (int)HttpStatusCode.BadRequest,
             errors
@@ -65,7 +65,7 @@ public class ExceptionHandlingMiddleware
 
         var response = new
         {
-            type = "https://tools.ietf.org/html/rfc7231#section-6.6.1",
+            type = HttpStatusCode.InternalServerError,
             title = "An error occurred while processing your request.",
             status = (int)HttpStatusCode.InternalServerError
         };
