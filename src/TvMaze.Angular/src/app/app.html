@@ -2,8 +2,12 @@
   <nav class="bg-white shadow-md border-b border-gray-200">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex justify-between items-center h-16">
-        <div class="flex items-center">
-          <h1 class="text-2xl font-bold text-gray-900">TVMaze</h1>
+        <div class="flex items-center gap-6">
+          <a routerLink="/" class="text-2xl font-bold text-gray-900 hover:text-blue-600">TVMaze</a>
+          <div class="flex gap-4">
+            <a routerLink="/" routerLinkActive="text-blue-600" [routerLinkActiveOptions]="{exact: true}" class="text-gray-600 hover:text-blue-600">Shows</a>
+            <a routerLink="/scraper" routerLinkActive="text-blue-600" class="text-gray-600 hover:text-blue-600">Scraper</a>
+          </div>
         </div>
         <div class="text-sm text-gray-500">
           {{ title() }}

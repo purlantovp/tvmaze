@@ -2,8 +2,10 @@ using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Http.Resilience;
 using TvMaze.Api.Application.Behaviors;
+using TvMaze.Api.Configuration;
 using TvMaze.Api.Data;
 using TvMaze.Api.Middleware;
+using TvMaze.Api.Services;
 using Polly;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -15,6 +17,10 @@ builder.Services.AddMediatR(cfg =>
 });
 
 builder.Services.AddValidatorsFromAssembly(typeof(Program).Assembly);
+
+builder.Services.Configure<CacheSettings>(builder.Configuration.GetSection("CacheSettings"));
+builder.Services.AddMemoryCache();
+builder.Services.AddScoped<ICacheService, MemoryCacheService>();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TvmazeService } from '../../services/tvmaze';
 import { Show } from '../../models/show.model';
@@ -17,7 +17,8 @@ export class ShowDetails implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private tvmazeService: TvmazeService
+    private tvmazeService: TvmazeService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -30,15 +31,19 @@ export class ShowDetails implements OnInit {
   loadShow(id: number): void {
     this.loading = true;
     this.error = '';
+    console.log('Loading show with id:', id);
     this.tvmazeService.getShowById(id).subscribe({
       next: (show: Show) => {
+        console.log('Received show:', show);
         this.show = show;
         this.loading = false;
+        this.cdr.detectChanges();
       },
       error: (error) => {
         console.error('Error loading show:', error);
         this.error = 'Show not found or error loading data.';
         this.loading = false;
+        this.cdr.detectChanges();
       },
     });
   }

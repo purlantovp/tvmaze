@@ -5,6 +5,7 @@ using TvMaze.Api.Data;
 using TvMaze.Api.Models;
 using TvMaze.Api.Models.Results;
 using TvMaze.Api.Models.TvMazeDtos;
+using TvMaze.Api.Services;
 
 namespace TvMaze.Api.Application.Features.ScrapeShows;
 
@@ -12,15 +13,18 @@ public class ScrapeShowsCommandHandler : IRequestHandler<ScrapeShowsCommand, Scr
 {
     private readonly IHttpClientFactory _httpClientFactory;
     private readonly TvMazeContext _context;
+    private readonly ICacheService _cacheService;
     private readonly ILogger<ScrapeShowsCommandHandler> _logger;
 
     public ScrapeShowsCommandHandler(
         IHttpClientFactory httpClientFactory,
         TvMazeContext context,
+        ICacheService cacheService,
         ILogger<ScrapeShowsCommandHandler> logger)
     {
         _httpClientFactory = httpClientFactory;
         _context = context;
+        _cacheService = cacheService;
         _logger = logger;
     }
 
@@ -51,13 +55,15 @@ public class ScrapeShowsCommandHandler : IRequestHandler<ScrapeShowsCommand, Scr
                     {
                         Id = tvShow.Id,
                         Name = tvShow.Name,
-                        Cast = tvMazeCast.Select(c => new CastMember
-                        {
-                            CastMemberId = c.Person.Id,
-                            Name = c.Person.Name,
-                            Birthday = c.Person.Birthday,
-                            ShowId = tvShow.Id
-                        }).ToList()
+                        Cast = tvMazeCast
+                            .DistinctBy(c => c.Person.Id)
+                            .Select(c => new CastMember
+                            {
+                                CastMemberId = c.Person.Id,
+                                Name = c.Person.Name,
+                                Birthday = c.Person.Birthday,
+                                ShowId = tvShow.Id
+                            }).ToList()
                     };
 
                     shows.Add(show);
@@ -71,6 +77,7 @@ public class ScrapeShowsCommandHandler : IRequestHandler<ScrapeShowsCommand, Scr
 
         int newShows = 0;
         int updatedShows = 0;
+        var updatedShowIds = new List<int>();
 
         foreach (var show in shows)
         {
@@ -89,25 +96,48 @@ public class ScrapeShowsCommandHandler : IRequestHandler<ScrapeShowsCommand, Scr
                 {
                     showToUpdate.Name = show.Name;
 
+                    // Remove existing cast members
                     _context.CastMembers.RemoveRange(showToUpdate.Cast);
+                    await _context.SaveChangesAsync(cancellationToken);
 
+                    // Clear the cast collection and add new members
+                    showToUpdate.Cast.Clear();
                     foreach (var castMember in show.Cast)
                     {
-                        showToUpdate.Cast.Add(castMember);
+                        showToUpdate.Cast.Add(new CastMember
+                        {
+                            CastMemberId = castMember.CastMemberId,
+                            Name = castMember.Name,
+                            Birthday = castMember.Birthday,
+                            ShowId = show.Id
+                        });
                     }
 
                     updatedShows++;
+                    updatedShowIds.Add(show.Id);
                 }
             }
             else
             {
                 await _context.Shows.AddAsync(show, cancellationToken);
                 newShows++;
+                updatedShowIds.Add(show.Id);
             }
 
             await _context.SaveChangesAsync(cancellationToken);
             _context.ChangeTracker.Clear();
         }
+
+        foreach (var showId in updatedShowIds)
+        {
+            _cacheService.Remove($"show_{showId}");
+        }
+
+        _cacheService.RemoveByPrefix("shows_page_");
+
+        _cacheService.Remove("shows_count");
+
+        _logger.LogInformation("Invalidated cache for {Count} shows and all paginated lists", updatedShowIds.Count);
 
         var result = new ScrapeResult
         {

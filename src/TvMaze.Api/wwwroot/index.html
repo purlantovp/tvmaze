@@ -437,7 +437,7 @@
             showStatus('Scraping shows from TVMaze API... This may take a few minutes.', 'loading');
 
             try {
-                const response = await fetch(`${API_BASE}/scraper/scrape?startPage=0&pageCount=2`, {
+                const response = await fetch(`${API_BASE}/scraper/scrape?startPage=0&pageCount=1`, {
                     method: 'POST'
                 });
 

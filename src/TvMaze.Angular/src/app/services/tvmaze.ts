@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { PagedResult, Show } from '../models/show.model';
+import { ScrapeResult } from '../models/scrape-result.model';
 import { ConfigService } from './config';
 
 @Injectable({
@@ -44,5 +45,13 @@ export class TvmazeService {
 
   getShowCount(): Observable<number> {
     return this.http.get<number>(`${this.apiUrl}/shows/count`);
+  }
+
+  scrape(startPage: number = 0, pageCount: number = 1): Observable<ScrapeResult> {
+    const params = new HttpParams()
+      .set('startPage', startPage.toString())
+      .set('pageCount', pageCount.toString());
+
+    return this.http.post<ScrapeResult>(`${this.apiUrl}/scraper/scrape`, null, { params });
   }
 }

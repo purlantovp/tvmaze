@@ -1,5 +1,6 @@
 import { NgModule, provideBrowserGlobalErrorListeners, APP_INITIALIZER } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { CommonModule } from '@angular/common';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 
@@ -7,6 +8,7 @@ import { AppRoutingModule } from './app-routing-module';
 import { App } from './app';
 import { ShowList } from './components/show-list/show-list';
 import { ShowDetails } from './components/show-details/show-details';
+import { Scraper } from './components/scraper/scraper';
 import { ConfigService } from './services/config';
 
 export function initializeApp(configService: ConfigService) {
@@ -17,10 +19,12 @@ export function initializeApp(configService: ConfigService) {
   declarations: [
     App,
     ShowList,
-    ShowDetails
+    ShowDetails,
+    Scraper
   ],
   imports: [
     BrowserModule,
+    CommonModule,
     FormsModule,
     AppRoutingModule
   ],

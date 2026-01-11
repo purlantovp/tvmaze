@@ -5,5 +5,5 @@ namespace TvMaze.Api.Application.Features.ScrapeShows;
 
 public record ScrapeShowsCommand(
     int StartPage = 0,
-    int PageCount = 10
+    int PageCount = 1
 ) : IRequest<ScrapeResult>;
