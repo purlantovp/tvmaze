@@ -63,8 +63,7 @@
               "RelativeToolTip": "Models\\Results\\ScrapeResult.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-01-11T19:04:21.106Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-01-11T19:04:21.106Z"
             },
             {
               "$type": "Document",
@@ -76,8 +75,7 @@
               "RelativeToolTip": "Models\\TvMazeDtos\\TvMazeCastMember.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-01-11T19:04:16.046Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-01-11T19:04:16.046Z"
             },
             {
               "$type": "Document",
@@ -89,8 +87,7 @@
               "RelativeToolTip": "Models\\TvMazeDtos\\TvMazePerson.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-01-11T19:04:12.634Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-01-11T19:04:12.634Z"
             },
             {
               "$type": "Document",
@@ -102,8 +99,7 @@
               "RelativeToolTip": "Models\\TvMazeDtos\\TvMazeShow.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-01-11T19:04:09.075Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-01-11T19:04:09.075Z"
             },
             {
               "$type": "Document",
@@ -115,8 +111,7 @@
               "RelativeToolTip": "Models\\DTOs\\ShowDto.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-01-11T19:03:58.744Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-01-11T19:03:58.744Z"
             }
           ]
         }

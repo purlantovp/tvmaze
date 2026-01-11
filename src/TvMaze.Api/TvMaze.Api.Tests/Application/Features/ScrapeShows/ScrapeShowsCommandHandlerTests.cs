@@ -9,6 +9,7 @@ using TvMaze.Api.Application.Features.ScrapeShows;
 using TvMaze.Api.Data;
 using TvMaze.Api.Models;
 using TvMaze.Api.Models.TvMazeDtos;
+using TvMaze.Api.Services;
 
 namespace TvMaze.Api.Tests.Application.Features.ScrapeShows;
 
@@ -16,6 +17,7 @@ public class ScrapeShowsCommandHandlerTests : IDisposable
 {
     private readonly TvMazeContext _context;
     private readonly Mock<IHttpClientFactory> _httpClientFactoryMock;
+    private readonly Mock<ICacheService> _cacheServiceMock;
     private readonly Mock<ILogger<ScrapeShowsCommandHandler>> _loggerMock;
     private readonly Mock<HttpMessageHandler> _httpMessageHandlerMock;
 
@@ -27,6 +29,7 @@ public class ScrapeShowsCommandHandlerTests : IDisposable
 
         _context = new TvMazeContext(options);
         _httpClientFactoryMock = new Mock<IHttpClientFactory>();
+        _cacheServiceMock = new Mock<ICacheService>();
         _loggerMock = new Mock<ILogger<ScrapeShowsCommandHandler>>();
         _httpMessageHandlerMock = new Mock<HttpMessageHandler>();
     }
@@ -271,6 +274,7 @@ public class ScrapeShowsCommandHandlerTests : IDisposable
         return new ScrapeShowsCommandHandler(
             _httpClientFactoryMock.Object,
             _context,
+            _cacheServiceMock.Object,
             _loggerMock.Object);
     }
 
