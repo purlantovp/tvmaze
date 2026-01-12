@@ -13,7 +13,8 @@ RUN apt-get update && apt-get install -y \
 # Install Node.js 20.x for the Angular frontend (if needed later)
 RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
     && apt-get install -y nodejs \
-    && npm install -g npm@latest
+    && npm install -g npm@latest \
+    && npm install -g @angular/cli@21
 
 # Create a non-root user
 ARG USERNAME=vscode

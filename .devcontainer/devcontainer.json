@@ -19,7 +19,7 @@
       ]
     }
   },
-  "postCreateCommand": "bash -lc 'dotnet --info && node --version && npm --version && corepack enable && npm i -g @angular/cli@21 && echo Dev container ready'",
+  "postCreateCommand": "bash -lc 'dotnet --info && node --version && npm --version && echo Dev container ready'",
   "remoteUser": "vscode",
   "overrideCommand": false,
   "runServices": [
