@@ -61,7 +61,7 @@ public class ScrapeShowsCommandHandler : IRequestHandler<ScrapeShowsCommand, Scr
                             {
                                 CastMemberId = c.Person.Id,
                                 Name = c.Person.Name,
-                                Birthday = c.Person.Birthday,
+                                Birthday = ConvertToUtc(c.Person.Birthday),
                                 ShowId = tvShow.Id
                             }).ToList()
                     };
@@ -108,7 +108,7 @@ public class ScrapeShowsCommandHandler : IRequestHandler<ScrapeShowsCommand, Scr
                         {
                             CastMemberId = castMember.CastMemberId,
                             Name = castMember.Name,
-                            Birthday = castMember.Birthday,
+                            Birthday = ConvertToUtc(castMember.Birthday),
                             ShowId = show.Id
                         });
                     }
@@ -153,5 +153,19 @@ public class ScrapeShowsCommandHandler : IRequestHandler<ScrapeShowsCommand, Scr
             result.TotalScraped, newShows, updatedShows);
 
         return result;
+    }
+
+    private static DateTime? ConvertToUtc(DateTime? dateTime)
+    {
+        if (!dateTime.HasValue)
+            return null;
+
+        return dateTime.Value.Kind switch
+        {
+            DateTimeKind.Utc => dateTime.Value,
+            DateTimeKind.Local => dateTime.Value.ToUniversalTime(),
+            DateTimeKind.Unspecified => DateTime.SpecifyKind(dateTime.Value, DateTimeKind.Utc),
+            _ => dateTime.Value
+        };
     }
 }

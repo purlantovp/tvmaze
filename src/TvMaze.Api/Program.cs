@@ -44,8 +44,8 @@ builder.Services.AddSwaggerGen(c =>
 });
 
 builder.Services.AddDbContext<TvMazeContext>(options =>
-    options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")
-        ?? "Data Source=tvmaze.db"));
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")
+        ?? "Host=localhost;Port=5432;Database=tvmaze;Username=tvmaze;Password=DevPassword!23"));
 
 builder.Services.AddScoped<ITvMazeContext>(provider => provider.GetRequiredService<TvMazeContext>());
 
@@ -85,9 +85,6 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseCors("AllowAll");
-
-app.UseDefaultFiles();
-app.UseStaticFiles();
 
 app.UseHttpsRedirection();
 app.UseAuthorization();

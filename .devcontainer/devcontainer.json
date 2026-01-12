@@ -1,11 +1,13 @@
 {
-  "name": "tvmaze Dev Container",
+  "name": "tvmaze-devcontainer",
   "dockerComposeFile": [
     "docker-compose.yml"
   ],
   "service": "devcontainer",
   "workspaceFolder": "/workspace",
-  "workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind,consistency=cached",
+  "mounts": [
+    "source=${localWorkspaceFolder},target=/workspace,type=bind,consistency=cached"
+  ],
   "customizations": {
     "vscode": {
       "extensions": [
@@ -15,15 +17,19 @@
         "dbaeumer.vscode-eslint",
         "anthropic.claude-vscode",
         "ms-dotnettools.csdevkit",
-        "qwtel.sqlite-viewer"
+        "qwtel.sqlite-viewer",
+        "ms-ossdata.vscode-pgsql"
       ]
     }
   },
-  "postCreateCommand": "bash -lc 'dotnet --info && node --version && npm --version && echo Dev container ready'",
+  "remoteEnv": {
+    "PATH": "${containerEnv:PATH}:/home/vscode/.npm-global/bin"
+  },
+  "postCreateCommand": "bash -lc 'dotnet --info && node --version && npm --version && ng --version'",
   "remoteUser": "vscode",
   "overrideCommand": false,
   "runServices": [
-    "mssql"
+    "postgres"
   ],
   "shutdownAction": "stopCompose"
 }
